@@ -8,19 +8,19 @@
 ; __config 0xFF70
     __CONFIG _FOSC_INTOSCIO & _WDTE_OFF & _PWRTE_ON & _MCLRE_ON & _BOREN_ON & _LVP_OFF & _CPD_OFF & _CP_OFF
 
-#define BANK0	BCF STATUS, RP0
-#define BANK1	BSF STATUS, RP0
-
-; CBLOC
+#define	BANK0	BCF STATUS,RP0
+#define	BANK1	BSF STATUS,RP0
+    
     CBLOCK 0X20
-        W_TEMP
-        S_TEMP
-        FLAGS
-        FILTRO
-        UNIDADE
-        DEZENA
+	UNIDADE
+	DEZENA
+	FILTRO
+	FLAGS
+	W_TEMP
+	S_TEMP
     ENDC
 
+    
 ; variáveis
 #define CONTEI    FLAGS,0
 #define TROCA_DISPLAY FLAGS,1
@@ -101,7 +101,7 @@ LACO_PRINCIPAL
     MOVLW .10 ; W = 10
     SUBWF UNIDADE, W ; W = UNIDADE - W
     BTFSS STATUS, C ; Testa se W < 0
-    CLRF UNIDADE ; UNIDADE = 0
+    ; CLRF UNIDADE ; UNIDADE = 0
     GOTO LACO_PRINCIPAL ; Se W < 0, pula para LACO_PRINCIPAL
 
     CLRF UNIDADE ; Zera UNIDADE
@@ -127,7 +127,7 @@ ATUALIZA_DISPLAY
     BCF TROCA_DISPLAY ; TROCA_DISPLAY = 0
     BTFSC QUAL_DISPLAY ; Testa se QUAL_DISPLAY = 0
     GOTO ACENDE_UNIDADE ; Se QUAL_DISPLAY = 0, pula para ACENDE_UNIDADE
-    MOVWF DEZENA,W ; W = DEZENA
+    MOVF DEZENA,W ; W = DEZENA
     CALL BUSCA_CODIGO ; Chama a função BUSCA_CODIGO
     ANDLW B'11101111' ; W = W AND B'11101111'
 
@@ -142,7 +142,18 @@ ACENDE_UNIDADE
 
 
 
-
-
-
+BUSCA_CODIGO
+    ADDWF   PCL,F		    ;PCL = PCL + W
+    RETLW   0XFE		    ;retorna a subrotina com w = 0xFE
+    RETLW   0X38		    ;retorna a subrotina com w = 0x38
+    RETLW   0XDD		    ;retorna a subrotina com w = 0xDD
+    RETLW   0X7D		    ;retorna a subrotina com w = 0x7D
+    RETLW   0X3B		    ;retorna a subrotina com w = 0x3B
+    RETLW   0X77		    ;retorna a subrotina com w = 0x77
+    RETLW   0XF7		    ;retorna a subrotina com w = 0xF7
+    RETLW   0X3C		    ;retorna a subrotina com w = 0x3C
+    RETLW   0XFF		    ;retorna a subrotina com w = 0xFF
+    RETLW   0X7F		    ;retorna a subrotina com w = 0X7F
+    
     END
+
